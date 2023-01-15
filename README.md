@@ -21,7 +21,7 @@
  
 #5. Heroku
  - https://diogolages-client-rest-api.herokuapp.com/swagger-ui.html
-   Authentication
+## Authentication
 	 - user: diogo
 	 - password: Dlt@21#
 
