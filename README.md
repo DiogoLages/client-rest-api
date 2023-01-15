@@ -1,5 +1,5 @@
-
 #Build a REST service in Java
+
 
 #1. Compile and run application:
  - Open a terminal (git bash, powershell, cmd) inside the project folder
