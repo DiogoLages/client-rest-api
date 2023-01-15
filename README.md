@@ -18,5 +18,17 @@
  - Run the published image on docker hub > docker run -p 8080:8080 diogolages/client:1.0
  - Generate image from api local > docker build -t diogolages/client:1.0 .
  - Run image in container local > docker run -p 8080:8080 diogolages/client:1.0
+ 
+#5. Heroku
+ - https://diogolages-client-rest-api.herokuapp.com/swagger-ui.html
+   Authentication
+	 - user: diogo
+	 - password: Dlt@21#
 
+	 - user: capitani
+	 - password: C@pitan1
+ 
+#6. Repository in Github
+ - https://github.com/DiogoLages/client-rest-api/
+ 
  
