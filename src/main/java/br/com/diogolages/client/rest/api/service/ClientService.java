@@ -1,0 +1,77 @@
+package br.com.diogolages.client.rest.api.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.com.diogolages.client.rest.api.entity.Client;
+import br.com.diogolages.client.rest.api.repository.ClientRepository;
+import br.com.diogolages.client.rest.api.service.exception.ResourceNotFoundException;
+
+@Service
+public class ClientService {
+	
+	private static final String NO_RECORD_FOUND = "No record found";
+	private static final String CLIENT_NOT_FOUND = "Client not found whit id: ";
+	private static final String CPF_ALREADY_REGISTERED_IN_THE_SYSTEM = "CPF already registered in the system";
+	
+	@Autowired
+	ClientRepository clientRepository;
+
+	public Client save(Client client) {
+		findByCpf(client);
+		return clientRepository.save(client);
+	}
+
+	public Client findById(long id) {
+		 Optional<Client> client = clientRepository.findById(id);
+		 if(client.isEmpty()) {
+			 throw new ResourceNotFoundException(CLIENT_NOT_FOUND + id);
+		 }
+		 return client.get();
+	}
+	
+	public List<Client> findAll() {
+		List<Client> clientList = clientRepository.findAll();
+		
+		if(clientList.isEmpty()) {
+			throw new ResourceNotFoundException(NO_RECORD_FOUND);
+		}
+		return clientRepository.findAll();
+	}
+
+	public Client updateClient(Client client) {
+		
+		findByCpf(client);
+		
+		Optional<Client> record = clientRepository.findById(client.getId());
+		 if(record.isEmpty()) {
+			 throw new ResourceNotFoundException(CLIENT_NOT_FOUND + client.getId());
+		 }
+		
+		 record.get().setName(client.getName());
+         record.get().setCpf(client.getCpf());
+         record.get().setAddress(client.getAddress());
+		 
+		return clientRepository.save(record.get());
+	
+	}
+
+	public void deleteClient(long id) {
+		Optional<Client> record = clientRepository.findById(id);
+		 if(record.isEmpty()) {
+			 throw new ResourceNotFoundException(CLIENT_NOT_FOUND + id);
+		 }
+		clientRepository.delete(record.get());
+	}
+	
+	private void findByCpf(Client client) {
+		Optional<Client> record = clientRepository.findByCpf(client.getCpf());
+		if(record.isPresent() && !client.getId().equals(record.get().getId())) {
+			throw new ResourceNotFoundException(CPF_ALREADY_REGISTERED_IN_THE_SYSTEM);
+		}
+	}
+
+}
