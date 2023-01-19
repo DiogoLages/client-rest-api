@@ -29,7 +29,7 @@ import br.com.diogolages.client.rest.api.service.ClientService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value="/api/client")
+@RequestMapping(value="/api/v1/client")
 public class ClientController {
 
 	private static final String ID = "/{id}";
