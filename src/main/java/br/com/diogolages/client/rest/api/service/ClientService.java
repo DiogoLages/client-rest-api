@@ -27,10 +27,7 @@ public class ClientService {
 
 	public Client findById(long id) {
 		 Optional<Client> client = clientRepository.findById(id);
-		 if(client.isEmpty()) {
-			 throw new ResourceNotFoundException(CLIENT_NOT_FOUND + id);
-		 }
-		 return client.get();
+		 return client.orElseThrow(() -> new ResourceNotFoundException(CLIENT_NOT_FOUND + id));
 	}
 	
 	public List<Client> findAll() {
@@ -39,32 +36,24 @@ public class ClientService {
 		if(clientList.isEmpty()) {
 			throw new ResourceNotFoundException(NO_RECORD_FOUND);
 		}
-		return clientRepository.findAll();
+		return clientList;
 	}
 
 	public Client updateClient(Client client) {
-		
 		findByCpf(client);
+		Client record = clientRepository.findById(client.getId())
+				.orElseThrow(() -> new ResourceNotFoundException(CLIENT_NOT_FOUND + client.getId()));
 		
-		Optional<Client> record = clientRepository.findById(client.getId());
-		 if(record.isEmpty()) {
-			 throw new ResourceNotFoundException(CLIENT_NOT_FOUND + client.getId());
-		 }
-		
-		 record.get().setName(client.getName());
-         record.get().setCpf(client.getCpf());
-         record.get().setAddress(client.getAddress());
-		 
-		return clientRepository.save(record.get());
-	
+		record.setName(client.getName());
+		record.setCpf(client.getCpf());
+		record.setAddress(client.getAddress());
+
+		return clientRepository.save(record);
 	}
 
 	public void deleteClient(long id) {
-		Optional<Client> record = clientRepository.findById(id);
-		 if(record.isEmpty()) {
-			 throw new ResourceNotFoundException(CLIENT_NOT_FOUND + id);
-		 }
-		clientRepository.delete(record.get());
+		Client record = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(CLIENT_NOT_FOUND + id));
+		clientRepository.delete(record);
 	}
 	
 	private void findByCpf(Client client) {
